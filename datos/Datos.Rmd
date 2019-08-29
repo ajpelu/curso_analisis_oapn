@@ -1,0 +1,31 @@
+---
+title: "Datos"
+output:  
+  md_document:
+    toc: true
+    variant: gfm
+bibliography: ../references.bib 
+csl: ../ecology.csl
+---
+
+
+```{r, echo = FALSE, message=FALSE}
+library(tidyverse)
+library(here)
+```
+
+# Datos 
+
+## Medidas biométricas de Roble melojo (*Quercus pyrenaica*) en Sierra Nevada. 
+Se trata de un conjunto de datos procedente de muestreos de estructura de los robledales en dos poblaciones de Sierra Nevada, una en cara norte (Robledal de San Juan, *SJ*) y otra en cara sur (Robledal de Cáñar, *CA*) [@PerezLuqueetal2015DatasetMIGRAME]En cada uno de estos robledales se llevaron a cabo transectos de 30 x 10 metros distribuidos al azar. Dendro de cada transecto se anotaron y midieron todos los individuos de roble. Se midieron la altura (*h*) y el diámetro (*d*; DBH para pies > 2 cm diámetro). Para cada pié se estimó la biomasa utilizando las ecuaciones para la especie desarrolladas por [@RuizPeinadoGertrudixetal2012BiomassModels]. 
+
+La siguiente tabla muestra un aspecto de los datos.
+```{r, message=FALSE, echo=FALSE}
+oak <- read_csv(here::here("/datos/biomass_pyrenaica.csv"))
+knitr::kable(head(oak))
+```
+
+Este conjunto de datos está en [`./datos/biomass_pyrenaica.csv`](./datos/biomass_pyrenaica.csv)
+
+# Referencias 
+
