@@ -8,9 +8,10 @@ de los robledales en dos poblaciones de Sierra Nevada, una en cara norte
 *CA*) (Pérez-Luque et al. 2015)En cada uno de estos robledales se
 llevaron a cabo transectos de 30 x 10 metros distribuidos al azar.
 Dendro de cada transecto se anotaron y midieron todos los individuos de
-roble. Se midieron la altura (*h*) y el diámetro (*d*; DBH para pies \>
-2 cm diámetro). Para cada pié se estimó la biomasa utilizando las
-ecuaciones para la especie desarrolladas por (Ruiz-Peinado et al. 2012).
+roble. Se midieron la altura (*h*, m) y el diámetro (*d*, cm; DBH para
+pies \> 2 cm diámetro). Para cada pié se estimó la biomasa aérea (*w*,
+kg) y radicular (*wr*, kg) utilizando las ecuaciones para la especie
+desarrolladas por (Ruiz-Peinado et al. 2012).
 
 La siguiente tabla muestra un aspecto de los
 datos.
