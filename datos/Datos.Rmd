@@ -22,10 +22,10 @@ Se trata de un conjunto de datos procedente de muestreos de estructura de los ro
 La siguiente tabla muestra un aspecto de los datos.
 ```{r, message=FALSE, echo=FALSE}
 oak <- read_csv(here::here("/datos/biomass_pyrenaica.csv"))
-knitr::kable(head(oak))
+knitr::kable(head(oak, 3L))
 ```
 
-Este conjunto de datos está en [`./datos/biomass_pyrenaica.csv`](./datos/biomass_pyrenaica.csv)
+Este conjunto de datos está en [`./datos/biomass_pyrenaica.csv`](../datos/biomass_pyrenaica.csv)
 
 # Referencias 
 
