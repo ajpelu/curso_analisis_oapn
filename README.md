@@ -22,7 +22,7 @@
 | Día | Horario       | Sesión                                                                                                       | Resp                                                 |
 |-----|---------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
 | 1   | 16:00 a 16:20 | Presentación del curso                                                                                       | Antonio J. Pérez-Luque; Gloria de Mingo-Sancho       |
-| 1   | 16:20 a 17:00 | [Introducción al análisis de datos](sesiones/0_Introduccion_Analisis_Datos.pdf)                                                                            | Antonio J. Pérez-Luque                               |
+| 1   | 16:20 a 17:00 | [Introducción al análisis de datos](./sesiones/0_Introduccion_Analisis_Datos.pdf)                                                                            | Antonio J. Pérez-Luque                               |
 | 1   | 17:00 a 18:00 | Exploración preliminar de los datos                                                                          | Antonio J. Pérez-Luque                               |
 | 1   | 18:00 a 19:00 | Introducción a los modelos lineales                                                                          | Francisco Rodríguez Sánchez                          |
 |     |               |                                                                                                              |                                                      |
