@@ -25,6 +25,27 @@ datos.
 Este conjunto de datos está en
 [`./datos/biomass_pyrenaica.csv`](../datos/biomass_pyrenaica.csv)
 
+## Precipitación acumulada (año hidrológico) en estaciones meteorológicas de Sierra Nevada.
+
+Dataset de precipitación acumulada durante el año hidrológico (oct-sep)
+recogida por 28 estaciones meteorológicas en el entorno de Sierra Nevada
+(fuente AEMET) en el período 1950-2017.
+
+Este conjunto de datos está en
+[`./datos/cummulated_precSN.csv`](../datos/cummulated_precSN.csv)
+
+La siguiente tabla muestra un aspecto de los datos.
+
+| hyear | csum\_mean |  csum\_sd |  csum\_se | n |
+| ----: | ---------: | --------: | --------: | -: |
+|  1950 |   146.4000 |  67.21009 |  67.21009 | 6 |
+|  1951 |   648.9000 |  65.05382 |  65.05382 | 2 |
+|  1952 |   729.2167 | 356.45087 | 356.45087 | 6 |
+
+Se muestra el valor promedio de precipitación acumulada para cada año
+(`csum_mean`), así como el error típico (`csum_se`) y la desviación
+estándar (`csum_sd`).
+
 # Referencias
 
 <div id="refs" class="references">

@@ -27,5 +27,21 @@ knitr::kable(head(oak, 3L))
 
 Este conjunto de datos está en [`./datos/biomass_pyrenaica.csv`](../datos/biomass_pyrenaica.csv)
 
+## Precipitación acumulada (año hidrológico) en estaciones meteorológicas de Sierra Nevada. 
+
+Dataset de precipitación acumulada durante el año hidrológico (oct-sep) recogida por 28 estaciones meteorológicas en el entorno de Sierra Nevada (fuente AEMET) en el período 1950-2017.
+
+Este conjunto de datos está en
+[`./datos/cummulated_precSN.csv`](../datos/cummulated_precSN.csv)
+
+La siguiente tabla muestra un aspecto de los datos.
+```{r, message=FALSE, echo=FALSE}
+prec <- read_csv(here::here("/datos/cummulated_precSN.csv"))
+knitr::kable(head(prec, 3L))
+```
+
+Se muestra el valor promedio de precipitación acumulada para cada año (`csum_mean`), así como el error típico (`csum_se`) y la desviación estándar (`csum_sd`). 
+
+
 # Referencias 
 

@@ -1,0 +1,314 @@
+---
+title: "Análisis Exploratorio de Datos"
+author: "Antonio J. Pérez-Luque"
+date: "Análisis de datos de seguimiento en la Red de Parques Nacionales"
+output:
+  beamer_presentation:
+    theme: "Pittsburgh"
+    colortheme: "beaver"
+    fig_height: 5
+    fig_width: 7
+    df_print: kable
+    includes:
+      in_header: header.tex
+    incremental: no
+    keep_tex: no
+    latex_engine: xelatex
+fontsize: 10pt
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r options, include=FALSE, cache=FALSE}
+library(rmarkdown)
+library(knitr)
+library(here)
+library(tidyverse)
+library(ggrepel)
+library(ggplot2)
+
+## Text results
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+## Code decoration
+opts_chunk$set(tidy = FALSE, comment = NA, highlight = TRUE, size = "footnotesize")
+
+```
+
+
+## 
+
+```{r qp_table}
+qp <- read_csv(here::here("/datos/biomass_pyrenaica.csv"))
+kable(head(qp, 8))
+```
+
+## 
+
+```{r qp_plot}
+qp %>% ggplot(aes(x=d, y=h)) + 
+  geom_point(size=5, col="black", fill= "#37474f", alpha=.8, shape=21) + 
+  theme_minimal() + xlab('DBH') + ylab('Tree height') +
+  theme(axis.title = element_text(size = 16, face = "bold"),
+        axis.text = element_text(size=14))
+```
+
+## Análisis exploratorio de Datos
+
+- Es una actitud (**iterativa**) hacia los datos, mas que un conjunto de técnicas 
+
+- Detective por un día. No hay una formula mágica
+
+- Encontrar patrones, revelar la estructura, evaluar posibles relaciones... 
+
+- Generar preguntas sobre los datos 
+
+- Buscar respuestas mediante la visualización, tranformación y "modelado" de los datos
+
+## Protocolo para explorar los datos
+
+\begincols
+\begincol 
+
+1. Detectar valores anómalos (outliers) 
+
+2. Homogeneidad 
+
+3. Normalidad 
+
+4. Relaciones 
+
+5. Colinearidad 
+
+6. Interacciones
+
+7. Indpendencia
+
+\endcol
+\begincol 
+![](images/outlier_comic.jpg)
+\endcol
+\endcols
+
+## Valores extremos (atípicos) - Outliers 
+
+Observaciones extremas, muy alejadas de la mayoría de las observaciones de la varible de interés. 
+
+Los **outliers** pueden influir sustancialmente el análisis estadístico. 
+
+![](images/influence_outliers.png)
+
+## 
+Ojo, los outliers pueden ser el interés de nuestro estudio (epidemiología, eventos extremos)
+
+```{r outlier_prec}
+presn <- read_csv(here::here("/datos/cummulated_precSN.csv"))
+
+meandf <- mean(presn$csum_mean)
+sddf <- sd(presn$csum_mean)
+yeah <- presn %>% filter(csum_mean < (meandf - 1*sddf)) %>% 
+  mutate(pos = csum_mean - 50) %>%  as.data.frame()
+  
+ggplot(presn, aes(x=hyear, y=csum_mean)) + 
+  geom_hline(yintercept = meandf) + 
+  geom_hline(yintercept = meandf + 2*sddf, color ='blue', linetype = 'dashed') +
+  geom_hline(yintercept = meandf - 2*sddf, color ='red', linetype = 'dashed') +
+  geom_hline(yintercept = meandf + 1*sddf, color ='blue', linetype = 'dotted') +
+  geom_hline(yintercept = meandf  - 1*sddf, color ='red', linetype = 'dotted') +
+  geom_errorbar(aes(ymin = csum_mean - csum_se, ymax= csum_mean + csum_se), width=.1, colour='gray') +
+  geom_point(size=2) + theme_bw() + 
+  geom_line(size=.25, colour = 'black') + 
+  scale_x_continuous(breaks=seq(1950,2015, by=5)) +
+  scale_y_continuous(breaks=seq(0,1500, by=250)) + 
+  geom_text_repel(
+    data = yeah,
+    aes(label = hyear), 
+    size = 2.5, 
+    alpha = .5,
+    colour = "black",
+    segment.size = 0.1, 
+    segment.alpha = 0.5,
+    point.padding=unit(.7,'lines'),
+    nudge_y = -yeah$csum_mean,
+    direction = 'x'
+    ) +
+  theme(panel.grid = element_blank(),
+        axis.title = element_text(size = 9),
+        axis.text.y = element_text(size = 8)) +
+  ylab('Cumulative Precipitation (mm)') + xlab('Year') +
+  expand_limits(y=c(0,2000)) 
+
+```
+
+## Outliers. ¿Cómo proceder?
+
+![](images/outlier_flow.png)
+
+## Outiliers. Identificación visual 
+
+![](images/boxplot_explain.png)
+
+## 
+\begincols
+\begincol
+```{r boxplot1, fig.height=8}
+boxplot(iris$Sepal.Width, ylab = "Sepal Width (mm)")
+```
+\endcol
+\begincol
+```{r boxplot2, fig.height=8}
+boxplot(Sepal.Width~Species, data=iris, ylab = "Sepal Width (mm)")
+```
+\endcol
+\endcols
+
+ 
+## Cleveland dotplot
+
+Orden de la observación *vs*. Valores observados 
+
+```{r dotchart, fig.height=5}
+iph <- read.table(file=here::here("/datos/iz/IrishPh.txt"), header = TRUE, dec = ".")
+
+dotchart(iph$Altitude, pch = 19, pt.cex = .7,
+         xlab = "Elevation", 
+         ylab = "Order of the data")
+```
+
+## Outliers - Test
+
+- Visualización subjetiva
+- Aplicación de un test 
+
+  - Z-score $Z_i = \frac{Y_i - \overline{y}}{\hat{\sigma}}$ > 3 
+  - Método de Tukey (Boxplot)
+  - Test de Grubb. Detecta la presencia de al menos un outlier en el dataset
+  
+- package [`outlier`](https://cran.r-project.org/web/packages/outliers/index.html)
+
+![](images/outlier_paper.png){height=150px}
+
+## ¿Cómom proceder con los Outliers? 
+
+1. Eliminarlos
+
+2. ¿Representan información ecologicamente relevante? 
+
+3. Construir modelos con/sin outliers
+
+4. Aplicar métodos que acomoden la presencia de outliers: 
+
+  - Análisis no paramétricos
+  - Trimmed means (Anovas Robustas) 
+  - Aplicar una transformación (cuidado!!)
+
+## Homogeneidad de la varianza (*homocedasticidad*)
+
+- Asume que la dispersión de todos los posibles valores de la población es la misma para cada valor de la covariable
+- Cuando no se cumple, se puede producir una estimación de los errores estándar errónea, lo que implica que los intervalos de confianza que se calculan están sesgados (muy estrechos o muy amplios)
+- Mas importante que la normalidad (mod. lineales)
+
+
+![](images/homocedasticidad.png){height=200px}
+
+## ¿Cómo detectar la homogeneidad de las varianzas? 
+- Boxplot condicionales
+
+```{r boxplot_conditional}
+
+benthos <- read.table(file=here::here("/datos/iz/macro.txt"), header = TRUE)
+benthos$fTaxonID <- factor(benthos$TaxonID,
+                           levels = c(1, 2, 3, 4, 5),
+                           labels = c ("Mol","Cru","Ech","Sip","Pol"))
+
+
+ggplot(benthos, aes(x=fTaxonID, y=Abundance)) + geom_boxplot() + theme_classic()
+```
+
+## 
+```{r homo_continua}
+fur <- read.table(file=here::here("/datos/iz/fur.txt"), header = TRUE)
+
+fur$Sex2 <- fur$Sex
+fur$Sex2[fur$Sex == 1] <- 1
+fur$Sex2[fur$Sex == 2] <- 16
+
+fur <- fur %>% mutate(sexF = case_when(
+  Sex == 1 ~ "Male", 
+  Sex == 2 ~ "Female"
+))
+
+ggplot(fur, aes(y=VAR26, x = IS, colour=sexF)) + 
+  geom_point(size = 3, aes(shape=sexF)) + theme_classic() + 
+  scale_color_manual(values = c("black", "gray")) +
+  ylab("Longitudinal length of lower alveoli (Fur Seal") + 
+  xlab("Age")
+```
+
+## Test para detectar la homogeneidad de las varianzas
+
+- Test de Barlett (`bartlett.test()`)
+  - Asume que la varianza de la muestra o de cada grupo es igual
+  - Requiere que los datos sean normales
+  
+```{r, eval=FALSE}
+bartlett.test(Abundance ~ fTaxonID, data= benthos)
+```
+  
+- Test de Levene  
+  - Asume igualdad de varianza entre las poblaciones. 
+  - Menos sensible a la no-normalidad 
+  - `levene.test()` paquete `lawstat` 
+  
+- Boxplot de Residuos del modelo *vs.* Valores ajustados
+
+### ¿Cómo manejar la heterocedasticidad? 
+1. Transformar la variable respuesta para estabilizar la varianza
+
+2. Aplicar técnicas que no requieran heterocedasticidad 
+
+## Normalidad 
+
+### Técnicas para detectar normalidad 
+- Histogramas simples y condicionales 
+- Gráficos de Densidad (*kernels*)
+
+```{r, fig.height=4}
+hist(iris$Sepal.Width, prob=TRUE, 
+     xlab= "Sepal Width (mm)", main='')# prob=TRUE for probabilities not counts
+lines(density(iris$Sepal.Width), col="blue", lwd=2) # add a density estimate with defaults
+lines(density(iris$Sepal.Width, adjust=2), lty="dotted", col="darkgreen", lwd=2) 
+
+```
+
+
+## 
+- Q-Q plots 
+
+```{r, echo=FALSE, fig.height=4}
+df <- data.frame(y = rt(200, df = 5))
+p <- ggplot(df, aes(sample = y))
+p + stat_qq() + stat_qq_line() + theme_classic() 
+```
+
+### Test-estadísticos 
+- Test Shapiro-Wilk  (`shapiro.test()) (n < 30)
+- Test Kolmogorov-Smirnov (`ks.test()`) (n > 100)
+- Test D'Agostino (sirve además para examinar asimetría y curtosis)
+
+## Normalidad
+
+¿Necesitamos que nuestros cumplan el supuesto de normalidad? 
+
+**No siempre**. Depende de la técnica estadística a aplicar:  
+
+- Análisis de Componentes Principales no requiere normalidad
+- Regresión lineal asume normalidad, aunque es razonablemente robusta si no se cumple la normalidad
+
+### Soluciones
+
+- Transformar variable respuesta
+- ¡Cuidado con la asimetría! 
+
+
+
