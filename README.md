@@ -23,7 +23,7 @@
 |-----|---------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
 | 1   | 16:00 a 16:20 | Presentación del curso                                                                                       | Antonio J. Pérez-Luque; Gloria de Mingo-Sancho       |
 | 1   | 16:20 a 17:00 | [Introducción al análisis de datos](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/0_Introducion_Analisis_Datos.pdf)                                                                            | Antonio J. Pérez-Luque                               |
-| 1   | 17:00 a 18:00 | Exploración preliminar de los datos                                                                          | Antonio J. Pérez-Luque                               |
+| 1   | 17:00 a 18:00 | [Exploración preliminar de los datos](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/Analisis_exploratorio_datos.pdf)                                                                          | Antonio J. Pérez-Luque                               |
 | 1   | 18:00 a 19:00 | Introducción a los modelos lineales                                                                          | Francisco Rodríguez Sánchez                          |
 |     |               |                                                                                                              |                                                      |
 | 2   | 09:00 a 10:30 | Modelos Lineales de Regresión                                                                                | Francisco Rodríguez Sánchez                          |
