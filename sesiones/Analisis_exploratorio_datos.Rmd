@@ -26,6 +26,9 @@ library(here)
 library(tidyverse)
 library(ggrepel)
 library(ggplot2)
+library(WVPlots)
+library(GGally)
+
 
 ## Text results
 opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
@@ -82,7 +85,7 @@ qp %>% ggplot(aes(x=d, y=h)) +
 
 6. Interacciones
 
-7. Indpendencia
+7. Independencia
 
 \endcol
 \begincol 
@@ -311,4 +314,198 @@ p + stat_qq() + stat_qq_line() + theme_classic()
 - ¡Cuidado con la asimetría! 
 
 
+## Relación entre variables 
 
+- ¿Están las variables asociadas? ¿Cómo están relacionadas? 
+
+```{r echo=FALSE}
+p <- qp %>% ggplot(aes(x=d, y=h)) + 
+  geom_point(size=5, col="black", fill= "#37474f", alpha=.8, shape=21) + 
+  theme_minimal() + xlab('DBH') + ylab('Tree height') +
+  theme(axis.title = element_text(size = 16, face = "bold"),
+        axis.text = element_text(size=14))
+
+# Model  
+n1 <- nls(h~SSasympOff(d,Asym,lrc,c0),data=qp)   
+p1 <- data.frame(d=seq(0,100, length.out = 200))
+p1$h <- predict(n1, newdata = p1)
+  
+m1 <- lm(h~d, data=qp)
+
+p
+```
+
+## Relación entre variables 
+
+- ¿Están las variables asociadas? ¿Cómo están relacionadas? 
+
+```{r}
+p + geom_abline(intercept = coef(m1)[1], slope = coef(m1)[2], 
+              col = "blue", size = 1.5)
+```
+
+## Relación entre variables 
+
+- ¿Están las variables asociadas? ¿Cómo están relacionadas? 
+
+```{r}
+p + geom_abline(intercept = coef(m1)[1], slope = coef(m1)[2], 
+              col = "blue", size = 1.5) +
+  geom_line(data = p1, size = 1.5, col="red") 
+```
+
+## Relación entre variables
+- Incluir otras covariables 
+```{r}
+q <- qp %>% ggplot(aes(x=d, y=h, fill=loc, col=loc)) + 
+  geom_point(size=3, alpha=.8, shape=21) + 
+  theme_minimal() + xlab('DBH') + ylab('Tree height') +
+  theme(axis.title = element_text(size = 16, face = "bold"),
+        axis.text = element_text(size=14)) 
+```
+
+```{r}
+q + geom_smooth(method = "lm", se=FALSE) 
+```
+
+## Relación entre variables
+- Incluir otras covariables 
+```{r}
+q + geom_smooth(method = "lm", se=FALSE) + facet_wrap(~loc)
+```
+
+## Relación entre variables (Pairplots)
+
+```{r}
+heger <- read.table(file=here::here("/datos/iz/heger.txt"), header = TRUE)
+# PairPlot(heger, colnames(heger)[c(2,4,8)], "")
+pairs(heger[, c(2,4,8)])
+
+```
+
+## Relación entre (muchas) variables 
+
+```{r}
+zooben <- read.table(file=here::here("/datos/iz/zooben.txt"), header = TRUE)
+MyVar <- c("Phyllodocidae", "Spionidae",
+           "Maldanidae", "Glyceridae",
+           "Onuphidae", "Lumbrineridae")
+ggpairs(zooben[, MyVar])
+
+```
+
+## Colinearidad 
+
+- La colinearidad es la existencia de una correlación entre dos variables explicativas (covariables).
+- Es uno de los retos más importantes a la hora de aplicar cualquier técnicas estadística
+- Principio de parsimonia (Occam's Razor)
+    
+    - Modelo mas simple
+    - *"A model should be as simple as possible. But no simpler"* (Einstein)
+    
+- Afecta de forma importate a regresiones múltiples, GLMs y a técnicas de análisis multivariante (RDA, CCA, etc). 
+
+### Métodos para detectarlo
+- Matrices de correlación entre variables 
+- Pairplots 
+- Factor de Inflacción de la Variaza (VIF) 
+
+## Factor de Inflacción de la Variaza (VIF) 
+Representa la proporción de la variabilidad (o varianza) de la variable que es explicada por el resto de las variables predictoras del modelo 
+$$VIF_{j} = \frac{1}{1-R^2_{j}}$$
+
+siendo $R^2_{j}$ es el coeficiente de determinación de la regresión del j-ésimo regresor sobre el resto.
+
+- A mayor valor, mayor probabilidad de que exista colinealidad ¿Cuando se considera un valor elevado?
+
+## Factor de Inflacción de la Variaza (VIF) 
+
+```{r}
+R2  <- seq(0, 0.99, length = 30)
+VIF <- 1 / (1 - R2)
+
+par(mar = c(5,5,2,2), cex.lab = .8)
+plot(x = R2,
+     y = sqrt(VIF),
+     type = "l",
+     xlab = expression(paste(R^2)),
+     ylab = expression(sqrt(VIF)))
+abline(h=3, lty=2, col="gray")
+text(x=.1, y = 5.5, labels = "VIF > 5", col="red")
+abline(h=5, col="red")
+abline(h=10, lty=2, col="gray")
+```
+
+## ¿Qué hacer cuando existe colinearidad? 
+
+- Ir eliminando covariables en función de: 
+  - VIF 
+  - sentido ecológico 
+- Recalcular VIF 
+- Iterar el proceso 
+- `vif()` del paquete `car`
+
+## Interacciones 
+
+- Hablamos de interacción cuando la relación entre las variables $x$ e $y$ depende de otra variable $z$
+- Tipos de interacción: 
+  - Variable continua - Variable categórica 
+  - Variables continuas
+  - Variables categóricas 
+  
+```{r, fig.height=3}
+iph$LOGAltitude <- log10(iph$Altitude)
+iph$fForested <- factor(iph$Forested,
+                            levels = c(1, 2),
+                            labels = c("Bosque", "Claro"))
+
+ggplot(iph, aes(x=LOGAltitude, y = pH)) + geom_point() + 
+  facet_wrap(~fForested) + geom_smooth(method = "lm", se=FALSE) +
+  theme_classic() + xlab("Log (Elevación)") + ylab("pH suelo")
+```
+
+## 
+```{r}
+bio <- read.table(file=here::here("/datos/iz/bio.txt"), header = TRUE)
+
+
+bio$fNutrient <- factor(bio$Nutrient)
+
+interaction.plot(x.factor=bio$fNutrient, 
+                 response = bio$Concentration, 
+                 trace.factor=bio$Treatment, 
+                 fun = mean, 
+                 xlab="Nutrient", 
+                 ylab = "Concentration", 
+                 trace.label = "Treatment",
+                 col = c("blue4", "red4"), 
+                 lwd=2, lty=1)
+```
+
+
+## Independencia 
+
+- La mayoría de las técnicas estadísticas asumen independencia de las observaciones 
+
+### ¿Cómo evaluar la independencia? 
+- Gráfico de la respuesta variable vs. tiempo 
+- Gráficos de autocorrelación (`acf`)
+
+
+```{r, fig.height=3}
+wader <- read.table(file=here::here("/datos/iz/wader.txt"), header = TRUE)
+#Define the time axis
+Time <- seq(1,25)
+plot(Time, wader$C.fuscicolis, type = "l", xlab = "Time (2 weeks)",
+     xlab= "",
+     main  = "Abundancia de Correlimos (C. fuscicollis)")
+```
+
+
+## Independencia
+```{r, fig.height=4}
+acf(wader$C.fuscicolis, main = "C. fuscicollis ACF")
+```
+
+- Detectar cualquier patrón indica "dependencia" 
+- Acomodar la independencia: Modelos mixtos

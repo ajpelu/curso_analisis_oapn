@@ -1,0 +1,136 @@
+---
+title: "Modelling oak recruitment at abandoned croplands"
+author: "Antonio J. Perez-Luque (@ajpelu)"
+output:  
+  pdf_document:
+    fig_width: 7
+    fig_height: 5
+fontsize: 11pt
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r packages, warning=FALSE, message=FALSE}
+library(lattice)
+library(tidyverse)
+library(here)
+source(here::here("script/auxfx.R"))
+```
+
+```{r prepareData}
+
+##  Read data
+# Abandonded crop data
+data_seed <- read.table(here::here("/datos/cul_abundance_seedling.txt"), head=TRUE, sep=";")
+
+# Select only data of nseed.Qp  
+ab.s <- data_seed[, c('nombre','localidad','tipo','subtipo','replicate','altitud','nseed.Qp')]
+
+# Set 0 to NA 
+ab.s[is.na(ab.s)] <- 0
+```
+
+## Aims 
+Model Oak seedlings (_n.seed_; heigth < 130 cm) as a function of: 
+- locality 
+- type of ecosystem 
+- Elevation 
+
+## Data Exploration 
+
+##### Outliers 
+
+```{r DataExploration_A_OutliersY, echo=FALSE, fig.align='center', cache=TRUE}
+# Y (seedling counts) (Cleveland dotplots)
+par(mfrow = c(1, 2))
+boxplot(ab.s$nseed.Qp, main='n.seed counts')
+dotchart(ab.s$nseed.Qp, xlab='Range of data', ylab='n.seeds counts',
+         groups=factor(ab.s$localidad), col=as.numeric(ab.s$tipo), pch=19)
+# the groups bit ensures that observations from the same gruop are grouped together
+# the pch command stands for point character (see pag 13. Zuur et al 2009)
+```
+
+```{r DataExploration_A_OutliersX, echo=FALSE, fig.align='center', cache=TRUE}
+# X variables 
+MyVar <- c('altitud', 'localidad', 'tipo')
+Mydotplot(as.matrix(ab.s[,MyVar]))  # See HighstatLibV6.R 
+```
+
+There are some potential outliers, in Canar locality. There are three transects with more than 50 seedling. 
+
+```{r}
+ab.s[ ab.s$nseed.Qp>50,]
+```
+
+These data are from forest type. 
+
+##### Collinearity of covariables 
+
+```{r DataExploration_B_Collinearity, fig.align='center', cache=TRUE}
+## Collinearity 
+MyVar <- c('altitud', 'localidad', 'tipo')
+Mypairs(ab.s[, MyVar])
+
+### See VIF 
+# Todas las covariables
+corvif(ab.s[, MyVar])
+
+# Quitamos la de mayor valor VIF
+MyVar2 <- c('localidad','tipo')
+corvif(ab.s[, MyVar2])
+```
+
+There is a high collinearity between ***altidud*** and ***localidad***. The variance inflation factors analysis reveals a medium value for ***altitud*** (vif=2.46). We removed the ***altitud*** from analysis (according to Zuur et al, 2013). We re-examined VIF and we found values close to 1 for the two variables. 
+
+
+##### Relationships Y vs X
+
+```{r DataExploration_C_Relationships, fig.align='center', cache=TRUE}
+# If X is a factor....boxplots
+par(mfrow = c(1, 2))
+boxplot(nseed.Qp ~ localidad, data = ab.s, ylab='n seed counts', main='Relationship nseed.Qp ~ localidad')
+abline(h=mean(ab.s$nseed.Qp),lty = 2)
+boxplot(nseed.Qp ~ tipo, data = ab.s, ylab='n seed counts', main='Relationship nseed.Qp ~ tipo')
+abline(h=mean(ab.s$nseed.Qp),lty = 2)
+```
+
+Another evidence of outliers for forest (`tipo='ROBLEDAL'`) of Canar locality (`localidad='CANAR'`).  
+
+##### Spatial/temporal aspects of sampling design (not relevant here)
+
+##### Interactions 
+
+```{r DataExploration_E_Interactions, fig.align='center', cache=TRUE}
+# Interactions 
+coplot(nseed.Qp ~ tipo | localidad, rows=1, data = ab.s)
+bwplot(nseed.Qp ~ factor(tipo) | factor(localidad), data = ab.s, col = 1, layout=c(1,2))
+```
+
+##### Zero inflation Y 
+
+```{r DataExploration_F_ZeroInflactions}
+# F. Zero inflation
+sum(ab.s$nseed.Qp == 0) / length(ab.s$nseed.Qp)
+```
+
+`r (sum(ab.s$nseed.Qp == 0) / length(ab.s$nseed.Qp))*100`% of data are zeros. We need to consider a model that accommodates this issue. 
+
+##### Summary from Data Exploration
+
+* There are three outliers. 
+* The ***altitud*** variable has high collinearity and a elevated *vif*. 
+* We decided to remove the three outliers and do not consider the altitud variable. 
+
+ 
+```{r DataExploration_OUTLIER}
+# Explore records with seelindg greather than 50
+ab.s[ ab.s$nseed.Qp>50,]
+
+# Remove data
+ab.s1 <- ab.s[ab.s$nseed.Qp<50,]
+
+# Explore again the interactions 
+bwplot(nseed.Qp ~ factor(tipo) | factor(localidad), data = ab.s1, col = 1, layout=c(1,2))
+```
+
