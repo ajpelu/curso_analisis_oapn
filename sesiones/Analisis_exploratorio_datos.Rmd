@@ -496,8 +496,7 @@ interaction.plot(x.factor=bio$fNutrient,
 wader <- read.table(file=here::here("/datos/iz/wader.txt"), header = TRUE)
 #Define the time axis
 Time <- seq(1,25)
-plot(Time, wader$C.fuscicolis, type = "l", xlab = "Time (2 weeks)",
-     xlab= "",
+plot(Time, wader$C.fuscicolis, type = "l", xlab = "Time (2 weeks)", ylab= "",
      main  = "Abundancia de Correlimos (C. fuscicollis)")
 ```
 
