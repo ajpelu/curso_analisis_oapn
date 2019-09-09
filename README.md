@@ -24,19 +24,19 @@
 | 1   | 16:00 a 16:20 | Presentación del curso                                                                                       | Antonio J. Pérez-Luque; Gloria de Mingo-Sancho       |
 | 1   | 16:20 a 17:00 | [Introducción al análisis de datos](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/0_Introducion_Analisis_Datos.pdf)                                                                            | Antonio J. Pérez-Luque                               |
 | 1   | 17:00 a 18:00 | [Exploración preliminar de los datos](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/Analisis_exploratorio_datos.pdf)                                                                          | Antonio J. Pérez-Luque                               |
-| 1   | 18:00 a 19:00 | Introducción a los modelos lineales                                                                          | Francisco Rodríguez Sánchez                          |
+| 1   | 18:00 a 19:00 | Trabajo práctico: Diseño de Experimentos / Organización de datos / R-commander                                                                     | Francisco Rodríguez Sánchez / Antonio J. Pérez-Luque              |
 |     |               |                                                                                                              |                                                      |
-| 2   | 09:00 a 10:30 | Modelos Lineales de Regresión                                                                                | Francisco Rodríguez Sánchez                          |
-| 2   | 10:30 a 11:30 | Análisis de la varianza (ANOVA)                                                                              | Francisco Rodríguez Sánchez                          |
+| 2   | 09:00 a 10:30 | Introducción a los modelos lineales                                                                          | Francisco Rodríguez Sánchez                          |
+| 2   | 10:30 a 11:30 | Modelos Lineales                                                                                             | Francisco Rodríguez Sánchez                          |
 | 2   | 11:30 a 12:00 | Descanso                                                                                                     |                                                      |
-| 2   | 12:00 a 13:00 | Análisis de correlación                                                                                      | Francisco Rodríguez Sánchez                          |
-| 2   | 13:00 a 14:00 | Aplicación de los modelos lineales a casos reales                                                            | Francisco Rodríguez Sánchez / Antonio J. Pérez-Luque |
+| 2   | 12:00 a 13:00 | Modelos Lineales                                                                                             | Francisco Rodríguez Sánchez                          |
+| 2   | 13:00 a 14:00 | Aplicación de los modelos lineales a casos reales                                                            | Francisco Rodríguez Sánchez                          |
 | 2   | 14:00 a 16:00 | COMIDA                                                                                                       |                                                      |
-| 2   | 16:00 a 17:30 | Introducción al análisis de series temporales                                                                | Antonio J. Pérez-Luque                               |
-| 2   | 17:30 a 19:00 | Análisis de tendencias                                                                                       | Antonio J. Pérez-Luque                               |
+| 2   | 16:00 a 17:30 | Introducción a los modelos lineales generalizados (GLM) y a los modelos lineales generalizados mixtos (GLMM) | Francisco Rodríguez Sánchez                          |
+| 2   | 17:30 a 19:00 | GLMs casos prácticos                                                                                         | Francisco Rodríguez Sánchez                          |
 |     |               |                                                                                                              |                                                      |
-| 3   | 09:00 a 10:30 | Análisis de tendencias temporales a datos de seguimiento                                                     | Antonio J. Pérez-Luque                               |
-| 3   | 10:30 a 11:30 | Introducción a los modelos lineales generalizados (GLM) y a los modelos lineales generalizados mixtos (GLMM) | Francisco Rodríguez Sánchez                          |
+| 3   | 09:00 a 10:00 | Introducción al análisis de series temporales.                                                               | Antonio J. Pérez-Luque                               |
+| 3   | 10:00 a 11:30 | Análisis de tendencias temporales a datos de seguimiento                                                     | Antonio J. Pérez-Luque                               |
 | 3   | 11:30 a 12:00 | Descanso                                                                                                     |                                                      |
 | 3   | 12:00 a 13.30 | Trabajo práctico con datos de seguimiento                                                                    | Francisco Rodríguez Sánchez / Antonio J. Pérez-Luque |
 | 3   | 13:30 a 14:00 | Evaluación del curso y fin de la actividad.                                                                  | Antonio J. Pérez-Luque; Gloria de Mingo-Sancho       |
