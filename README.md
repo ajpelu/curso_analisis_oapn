@@ -35,7 +35,7 @@
 | 2   | 16:00 a 17:30 | [Introducción a los modelos lineales generalizados (GLM) y a los modelos lineales generalizados mixtos (GLMM)](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/GLMs.pdf) | Francisco Rodríguez Sánchez                          |
 | 2   | 17:30 a 19:00 | GLMs casos prácticos                                                                                         | Francisco Rodríguez Sánchez                          |
 |     |               |                                                                                                              |                                                      |
-| 3   | 09:00 a 10:00 | Introducción al análisis de series temporales.                                                               | Antonio J. Pérez-Luque                               |
+| 3   | 09:00 a 10:00 | [Introducción al análisis de series temporales](https://github.com/ajpelu/curso_analisis_oapn/blob/master/sesiones/intro_series_temporales.pdf)                                                               | Antonio J. Pérez-Luque                               |
 | 3   | 10:00 a 11:30 | Análisis de tendencias temporales a datos de seguimiento                                                     | Antonio J. Pérez-Luque                               |
 | 3   | 11:30 a 12:00 | Descanso                                                                                                     |                                                      |
 | 3   | 12:00 a 13.30 | Trabajo práctico con datos de seguimiento                                                                    | Francisco Rodríguez Sánchez / Antonio J. Pérez-Luque |
